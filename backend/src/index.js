@@ -1,4 +1,5 @@
 require('dotenv').config();
+const morgan = require("morgan");
 const express = require('express');
 const cors = require('cors');
 const postRoutes = require('./routes/posts');
@@ -6,6 +7,7 @@ const commentRoutes = require('./routes/comments');
 const db = require('./db');
 
 const app = express();
+app.use(morgan("combined"));
 const PORT = process.env.PORT || 5000;
 
 // Middleware

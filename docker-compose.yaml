@@ -1,0 +1,48 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jerney-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    networks:
+      - jerney-network
+    environment:
+      DB_HOST: db
+      DB_USER: jereny
+      DB_PASSWORD: password
+      DB_NAME: jereny_db
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: jerney-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - jerney-network
+
+  db:
+    image: postgres:15
+    container_name: jerney-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jereny
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: jereny_db
+    ports:
+      - "5432:5432"
+    networks:
+      - jerney-network
+
+networks:
+  jerney-network:
+    driver: bridge
