@@ -31,10 +31,75 @@ This repo reflects my work on making the application run in a more production-li
 - 🎨 Gen-Z dark UI with glassmorphism and gradients
 
 ## 🏗️ Architecture
+![Architecture Diagram](architecture.png)
+User → Application Entry Point
+A user (browser) sends an HTTP request
+The request goes to your EC2 instance
+Specifically, it hits the Frontend (Nginx) on port 80
 
+👉 This is the public entry point of your system
 
+ EC2 Instance (Your Server)
+Everything is hosted inside one EC2 machine
+You are not using Kubernetes or multiple servers yet
+Instead, you're using Docker Compose to manage services
 
+👉 Think of EC2 as your “mini data center”
 
+ Docker Compose (Core of the System)
+
+Inside EC2, Docker Compose runs 3 containers/services:
+
+🟢 Frontend (Nginx)
+Runs on port 80
+Serves your UI (React, HTML, etc.)
+Also acts as a reverse proxy
+Sends API requests to backend
+
+👉 Flow:
+User → Nginx → Backend
+
+🟢 Backend (Node.js API)
+Runs on port 5000
+Handles business logic
+Processes requests from frontend
+
+👉 Flow:
+Frontend → Backend
+
+🟢 Database (PostgreSQL)
+Stores application data
+Only accessible internally (not exposed publicly)
+
+👉 Flow:
+Backend → PostgreSQL
+
+ Docker Network
+All 3 services are connected via a private Docker network
+They communicate using service names (not IPs)
+
+👉 Example:
+
+Backend connects to DB using postgres:5432
+Amazon ECR (Container Registry)
+Stores your Docker images
+EC2 pulls images from ECR before running them
+
+👉 Flow:
+ECR → EC2 → Docker Compose runs containers
+
+Full Request Flow (End-to-End)
+
+Here’s the complete journey:
+
+User opens your app in browser
+Request hits Nginx (port 80)
+Nginx forwards API request → Node.js backend (port 5000)
+Backend queries → PostgreSQL database
+Response flows back the same way
+
+👉 Final:
+User ← Nginx ← Backend ← Database
 
 
 ## 🚀 Run This Project (Docker - Recommended)
