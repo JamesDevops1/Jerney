@@ -31,7 +31,7 @@ This repo reflects my work on making the application run in a more production-li
 - 🎨 Gen-Z dark UI with glassmorphism and gradients
 
 ## 🏗️ Architecture
-![Architecture Diagram](architecture.png)
+![Architecture Diagram](docs/architecture.png)
 User → Application Entry Point
 A user (browser) sends an HTTP request
 The request goes to your EC2 instance
